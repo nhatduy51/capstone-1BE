@@ -1,6 +1,8 @@
 const express = require("express");
-// const bodyParser = require("body-parser"); /* deprecated */
 const cors = require("cors");
+const passport = require('passport');
+const publicRoutes = require('./app/routes/public.routes');
+require('./app/auth/auth');
 
 const app = express();
 
@@ -28,6 +30,11 @@ db.sequelize.sync();
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to bezkoder application." });
 });
+
+app.use('/', publicRoutes);
+app.get('/abc', passport.authenticate('jwt', { session: false }), (req, res) => {
+  res.json({ message: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" });
+})
 
 // require("./app/routes/turorial.routes")(app);
 
