@@ -9,7 +9,7 @@ publicRouter.post(
   async (req, res, next) => {
     passport.authenticate("signup", { session: false }, async (err, user, info) => {
       if(err) {
-        return res.status(400).json(info);
+        return res.status(400).json(err.toString());
       }
 
       return res.json({ username: user.username });
