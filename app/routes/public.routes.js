@@ -29,9 +29,16 @@ publicRouter.post("/login", async (req, res, next) => {
       req.login(user, { session: false }, async (error) => {
         if (error) return next(error);
 
+        let roles = await user.getRoles();
         const body = {
-          _id: user._id,
-          email: user.email,
+          id: user.id,
+          username: user.username,
+          roles: roles.map(r => {
+            return {
+              id: r.id,
+              name: r.name
+            }
+          })
         };
         const token = jwt.sign({ user: body }, "TOP_SECRET");
 

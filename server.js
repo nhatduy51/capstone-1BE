@@ -32,8 +32,15 @@ app.get("/", (req, res) => {
 });
 
 app.use('/', publicRoutes);
-app.get('/abc', passport.authenticate('jwt', { session: false }), (req, res) => {
-  res.json({ message: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" });
+app.get('/abc', (req, res, next) => {
+  passport.authenticate('jwt', { session: false }, async (err, user, inf) => {
+    if(user) {
+      req.principal = user
+      next()
+    }
+  })(req, res, next)
+}, (req, res, next) => {
+  console.log('')
 })
 
 // require("./app/routes/turorial.routes")(app);

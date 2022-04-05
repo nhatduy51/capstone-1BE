@@ -25,11 +25,14 @@ passport.use(
                 password = await bcrypt.hash(password, 10);
                 const user = await User.create({ username, password, name: req.body.name ? req.body.name : null });
 
-                const roles = await Role.findAll({
-                    where: {
-                        name: req.body.roles
-                    }
-                });
+                let roles = undefined
+
+                if(req.body.roles)
+                    roles = await Role.findAll({
+                        where: {
+                            name: req.body.roles
+                        }
+                    });
 
                 if(roles) {
                     await user.setRoles(roles)
@@ -37,6 +40,7 @@ passport.use(
 
                 return done(null, user);
             } catch (error) {
+                console.error(error)
                 done(error);
             }
         }
