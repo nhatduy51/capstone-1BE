@@ -5,12 +5,6 @@ const Role = db.role;
 const Appointment = db.appointment;
 const appointmentRoute = express.Router();
 
-appointmentRoute.get("/", async (req, res, next) => {
-  let appointment = await Appointment.findAll()
-
-  return res.json(appointment);
-})
-
 async function findUserByPkAndRole(userId, role) {
   return User.findOne({
     include: [{
@@ -25,7 +19,7 @@ async function findUserByPkAndRole(userId, role) {
 appointmentRoute.get("/", async (req, res, next) => {
   let user = await User.findByPk(13);
 
-  return res.json(await user.getUserAppointments())
+  return res.json(await user.getDoctorAppointments())
 })
 
 appointmentRoute.post("/", async (req, res, next) => {
