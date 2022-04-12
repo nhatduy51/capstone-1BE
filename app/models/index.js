@@ -26,9 +26,26 @@ db.blog = require("./blog.model.js")(sequelize, Sequelize);
 db.appointment = require("./appointment.model.js")(sequelize, Sequelize);
 
 db.user.hasMany(db.blog);
+db.user.hasMany(db.appointment, {
+  // foreignKey: 'user_id',
+  as: 'userAppointments'
+})
+db.user.hasMany(db.appointment, {
+  // foreignKey: 'doctor_id',
+  as: 'doctorAppointments'
+})
 db.user.belongsToMany(db.role, { through: 'user_role' });
 
 db.role.belongsToMany(db.user, { through: 'user_role' })
 db.blog.belongsTo(db.user);
+
+db.appointment.belongsTo(db.user, {
+  // foreignKey: 'user_id',
+  as: 'user'
+})
+db.appointment.belongsTo(db.user, {
+  // foreignKey: 'doctor_id',
+  as: 'doctor'
+})
 
 module.exports = db;
