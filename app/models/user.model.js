@@ -8,6 +8,18 @@ module.exports = (sequelize, Sequelize) => {
     },
     name: {
       type: Sequelize.STRING
+    },
+    gender: {
+      type: Sequelize.ENUM('MALE', 'FEMALE'),
+    },
+    phoneNumber: {
+      type: Sequelize.STRING
+    },
+    image: {
+      type: Sequelize.STRING
+    },
+    professionalTitle: {
+      type: Sequelize.STRING
     }
   });
 };
