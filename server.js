@@ -4,6 +4,7 @@ const passport = require('passport');
 const publicRoutes = require('./app/routes/public.routes');
 const doctorRoutes = require('./app/routes/doctor.routes');
 const appointmentRoutes = require('./app/routes/appointment.routes');
+const blogRoutes = require('./app/routes/blog.routes');
 const authMiddlewares = require('./app/middlewares/auth.middlewares')
 require('./app/auth/auth');
 
@@ -37,7 +38,7 @@ app.get("/", (req, res) => {
 app.use('/', publicRoutes);
 app.use('/doctors', authMiddlewares.jwt, authMiddlewares.isAdmin, doctorRoutes);
 app.use('/appointments', authMiddlewares.jwt/*, authMiddlewares.isAdmin*/, appointmentRoutes);
-
+app.use('/blogs', authMiddlewares.jwt, blogRoutes);
 app.get('/abc', (req, res, next) => {
   passport.authenticate('jwt', { session: false }, async (err, user, inf) => {
     if(user) {
