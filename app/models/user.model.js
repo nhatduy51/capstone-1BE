@@ -20,6 +20,9 @@ module.exports = (sequelize, Sequelize) => {
     },
     professionalTitle: {
       type: Sequelize.STRING
+    },
+    specialist: {
+      type: Sequelize.STRING
     }
   });
 };
