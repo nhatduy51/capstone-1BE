@@ -13,13 +13,15 @@ userRouter.get("/:id/appointments", async (req, res, next) => {
 
   let roles = await user.getRoles();
 
+  let rs = [];
   if (roles[0].name === 'user') { //normal user
-    return res.json(await user.getUserAppointments());
+    rs = await user.getUserAppointments()
 
   } else if (roles[0].name === 'doctor') { //doctor
-    return res.json(await user.getDoctorAppointments());
+    rs = await user.getDoctorAppointments()
   }
 
+  return res.json(rs);
 });
 
 /* userRouter.get("/", async (req, res, next) => {

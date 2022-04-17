@@ -17,9 +17,15 @@ async function findUserByPkAndRole(userId, role) {
 }
 
 appointmentRoute.get("/", async (req, res, next) => {
-  let user = await User.findByPk(13);
 
-  return res.json(await user.getDoctorAppointments())
+  try {
+    let user = await User.findByPk(13);
+
+    return res.json(await user.getDoctorAppointments())
+  } catch (e) {
+    console.log(e)
+  }
+
 })
 
 appointmentRoute.post("/", async (req, res, next) => {
