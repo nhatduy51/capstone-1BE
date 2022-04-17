@@ -26,15 +26,7 @@ doctorRoute.post("/", async (req, res, next) => {
     }
 
     const password = await bcrypt.hash(req.body.password, 10);
-    const user = await User.create({
-      username: req.body.username,
-      password,
-      name: req.body.name ? req.body.name : null,
-      gender: req.body.phoneNumber,
-      phoneNumber: req.body.phoneNumber,
-      image: req.body.image,
-      professionalTitle: req.body.professionalTitle
-    });
+    const user = await User.create({ username: req.body.username, password, name: req.body.name ? req.body.name : null });
 
     let roles =  await Role.findOne({
         where: {
