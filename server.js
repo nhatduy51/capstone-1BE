@@ -3,6 +3,7 @@ const cors = require("cors");
 const passport = require('passport');
 const publicRoutes = require('./app/routes/public.routes');
 const authenticatedRoutes = require('./app/routes/authenticated.routes');
+const userRoutes = require('./app/routes/user.routes');
 const doctorRoutes = require('./app/routes/doctor.routes');
 const appointmentRoutes = require('./app/routes/appointment.routes');
 const blogRoutes = require('./app/routes/blog.routes');
@@ -38,6 +39,7 @@ app.get("/", (req, res) => {
 
 app.use('/', publicRoutes);
 app.use('/authenticated', authMiddlewares.jwt, authenticatedRoutes);
+app.use('/users', authMiddlewares.jwt, userRoutes);
 app.use('/doctors', authMiddlewares.jwt, authMiddlewares.isAdmin, doctorRoutes);
 app.use('/appointments', authMiddlewares.jwt/*, authMiddlewares.isAdmin*/, appointmentRoutes);
 app.use('/blogs', authMiddlewares.jwt, blogRoutes);
