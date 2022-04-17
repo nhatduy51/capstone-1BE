@@ -37,7 +37,7 @@ app.get("/", (req, res) => {
 });
 
 app.use('/', publicRoutes);
-app.use('/profile', authMiddlewares.jwt, authenticatedRoutes);
+app.use('/authenticated', authMiddlewares.jwt, authenticatedRoutes);
 app.use('/doctors', authMiddlewares.jwt, authMiddlewares.isAdmin, doctorRoutes);
 app.use('/appointments', authMiddlewares.jwt/*, authMiddlewares.isAdmin*/, appointmentRoutes);
 app.use('/blogs', authMiddlewares.jwt, blogRoutes);
