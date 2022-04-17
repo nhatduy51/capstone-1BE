@@ -5,12 +5,12 @@ const Appointment = db.appointment;
 
 const userRouter = express.Router();
 
-userRouter.get("/", async (req, res, next) => {
-
+userRouter.get("/:id/appointments", async (req, res, next) => {
+  const id = req.params.id;
 });
 
-userRouter.post("/", async (req, res, next) => {
+/*userRouter.post("/", async (req, res, next) => {
 
-});
+});*/
 
 module.exports = userRouter;
