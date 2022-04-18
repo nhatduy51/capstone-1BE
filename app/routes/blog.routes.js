@@ -21,7 +21,10 @@ blogRoute.get("/:id", async (req, res, next) => {
 
 blogRoute.post("/", async (req, res, next) => {
     try {
-        let user = await User.findByPk(2);
+        let user = req.principal;
+        if (!user) {
+            return res.status(401).send();
+        }
 
         const blog = await Blog.create({
             userId: user.id,

@@ -26,7 +26,8 @@ authenticatedRoute.put("/profile", async (req, res, next) => {
             gender: req.body.gender ? req.body.gender : null,
             phoneNumber: req.body.phoneNumber ? req.body.phoneNumber : null,
             image: req.body.image ? req.body.image : null,
-            professionalTitle: req.body.professionalTitle ? req.body.professionalTitle : null
+            professionalTitle: req.body.professionalTitle ? req.body.professionalTitle : null,
+            specialist: req.body.specialist ? req.body.specialist : null
         });
         return res.json(foundUser);        
     } catch (error) {
