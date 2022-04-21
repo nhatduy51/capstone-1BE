@@ -18,13 +18,15 @@ async function findUserByPkAndRole(userId, role) {
 
 appointmentRoute.get("/", async (req, res, next) => {
 
-  try {
-    let user = await User.findByPk(13);
-
-    return res.json(await user.getDoctorAppointments())
-  } catch (e) {
-    console.log(e)
-  }
+  let all = await Appointment.findAll();
+  return res.json(all);
+  // try {
+  //   let user = await User.findByPk(13);
+  //
+  //   return res.json(await user.getDoctorAppointments())
+  // } catch (e) {
+  //   console.log(e)
+  // }
 
 })
 
@@ -41,7 +43,24 @@ appointmentRoute.post("/", async (req, res, next) => {
       return res.status(400).json('Doctor not found')
     }
 
-    const appointment = await Appointment.create({ startTime: req.body.startTime, endTime: req.body.endTime, userId: user.id, doctorId: doctor.id });
+    let startTime = new Date(req.body.startTime);
+    let endTime = new Date(req.body.endTime);
+
+    let allSchedulesOfDoctor = await doctor.getDoctorAppointments();
+    let conflict = allSchedulesOfDoctor.some(s => (endTime > s.startTime && endTime < s.endTime) || (startTime > s.startTime && startTime < s.startTime));
+
+    if(conflict) {
+      return res.status(400).json("Conflict doctor")
+    }
+
+    let allSchedulesOfUser = await user.getUserAppointments();
+    conflict = allSchedulesOfUser.some(s => (endTime > s.startTime && endTime < s.endTime) || (startTime > s.startTime && startTime < s.startTime))
+
+    if(conflict) {
+      return res.status(400).json("Conflict user")
+    }
+
+    const appointment = await Appointment.create({ startTime, endTime, userId: user.id, doctorId: doctor.id });
 
     return res.json(appointment);
   } catch (error) {
