@@ -4,6 +4,7 @@ const User = db.user;
 const Role = db.role;
 const bcrypt = require("bcrypt");
 const doctorRoute = express.Router();
+const { Op } = require("sequelize");
 
 doctorRoute.get("/", async (req, res, next) => {
   let doctors = await User.findAll({
@@ -18,23 +19,87 @@ doctorRoute.get("/", async (req, res, next) => {
   return res.json(doctors);
 })
 
+doctorRoute.get("/bySpecialist", async (req, res, next) => {
+  let doctors = await User.findAll({
+    include: [{
+      model: Role,
+      attributes: [],
+      require: true,
+    }],
+    where: {
+      specialist: req.body.specialist
+    }
+  })
+
+  return res.json(doctors);
+})
+
+doctorRoute.get("/byKeyword", async (req, res, next) => {
+  let doctors = await User.findAll({
+    include: [{
+      model: Role,
+      attributes: [],
+      require: true,
+    }],
+    where: {
+      [Op.or]: [{
+          name: {
+            [Op.like]: '%' + req.body.keyword + '%'
+          }
+        },
+        {
+          gender: {
+            [Op.like]: '%' + req.body.keyword + '%'
+          }
+        },
+        {
+          phoneNumber: {
+            [Op.like]: '%' + req.body.keyword + '%'
+          }
+        },
+        {
+          professionalTitle: {
+            [Op.like]: '%' + req.body.keyword + '%'
+          }
+        },
+        {
+          specialist: {
+            [Op.like]: '%' + req.body.keyword + '%'
+          }
+        }
+      ]
+    }
+  })
+
+  return res.json(doctors);
+})
+
+
 doctorRoute.post("/", async (req, res, next) => {
   try {
-    const existed = await User.findOne({ where: { username: req.body.username } })
-    if(existed) {
+    const existed = await User.findOne({
+      where: {
+        username: req.body.username
+      }
+    })
+    if (existed) {
       return res.status(400).json('User existed');
     }
 
     const password = await bcrypt.hash(req.body.password, 10);
-    const user = await User.create({ username: req.body.username, password, name: req.body.name ? req.body.name : null });
+    const user = await User.create({
+      username: req.body.username,
+      password,
+      name: req.body.name ? req.body.name : null
+    });
 
-    let roles =  await Role.findOne({
-        where: {
-          name: 'doctor'
-        }
-      });
+    let roles = await Role.findOne({
+      where: {
+        name: 'doctor'
+      }
+    });
 
-    if(roles) {
+    if (roles) {
       await user.setRoles(roles)
     }
 
@@ -47,13 +112,16 @@ doctorRoute.post("/", async (req, res, next) => {
 
 doctorRoute.put("/:id", async (req, res, next) => {
   let doctor = await User.findByPk(req.params.id)
-  if(!doctor) {
+  if (!doctor) {
     return res.status(404).send();
   }
 
-  doctor.update({ name: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa" })
+  doctor.update({
+    name: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  })
 
   return res.json(doctor)
 })
+
 
 module.exports = doctorRoute;
