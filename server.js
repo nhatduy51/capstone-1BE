@@ -40,7 +40,7 @@ app.get("/", (req, res) => {
 app.use('/', publicRoutes);
 app.use('/authenticated', authMiddlewares.jwt, authenticatedRoutes);
 app.use('/users', authMiddlewares.jwt, userRoutes);
-app.use('/doctors', authMiddlewares.jwt, authMiddlewares.isAdmin, doctorRoutes);
+app.use('/doctors', authMiddlewares.jwt, doctorRoutes);
 app.use('/appointments', authMiddlewares.jwt/*, authMiddlewares.isAdmin*/, appointmentRoutes);
 app.use('/blogs', authMiddlewares.jwt, blogRoutes);
 app.get('/abc', (req, res, next) => {
