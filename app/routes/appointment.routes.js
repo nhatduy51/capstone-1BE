@@ -47,14 +47,16 @@ appointmentRoute.post("/", async (req, res, next) => {
     let endTime = new Date(req.body.endTime);
 
     let allSchedulesOfDoctor = await doctor.getDoctorAppointments();
-    let conflict = allSchedulesOfDoctor.some(s => (endTime > s.startTime && endTime < s.endTime) || (startTime > s.startTime && startTime < s.startTime));
+    let conflict = allSchedulesOfDoctor.some(s => (endTime >= s.startTime && endTime <= s.endTime)
+        || (startTime >= s.startTime && startTime <= s.startTime));
 
     if(conflict) {
       return res.status(400).json("Conflict doctor")
     }
 
     let allSchedulesOfUser = await user.getUserAppointments();
-    conflict = allSchedulesOfUser.some(s => (endTime > s.startTime && endTime < s.endTime) || (startTime > s.startTime && startTime < s.startTime))
+    conflict = allSchedulesOfUser.some(s => (endTime >= s.startTime && endTime <= s.endTime)
+        || (startTime >= s.startTime && startTime <= s.startTime))
 
     if(conflict) {
       return res.status(400).json("Conflict user")
