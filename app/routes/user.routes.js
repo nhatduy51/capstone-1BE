@@ -1,6 +1,7 @@
 const express = require("express");
 const db = require("../models");
 const User = db.user;
+const Role = db.role;
 
 const userRouter = express.Router();
 
@@ -22,6 +23,21 @@ userRouter.get("/:id/appointments", async (req, res, next) => {
 
   return res.json(rs);
 });
+
+userRouter.get("/:id", async (req, res, next) => {
+  let user = await User.findByPk(req.params.id, {
+    include: [{
+      model: Role,
+      as: 'roles',
+      require: true,
+    }]
+  })
+  if (!user) {
+    return res.status(404).send();
+  }
+
+  return res.json(user)
+})
 
 /* userRouter.get("/", async (req, res, next) => {
   

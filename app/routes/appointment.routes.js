@@ -1,5 +1,6 @@
 const express = require("express");
 const db = require("../models");
+const authMiddlewares = require("../middlewares/auth.middlewares");
 const User = db.user;
 const Role = db.role;
 const Appointment = db.appointment;
@@ -81,5 +82,21 @@ appointmentRoute.put("/:id", async (req, res, next) => {
 
   return res.json(doctor)
 })
+
+appointmentRoute.delete("/:id", async (req, res, next) => {
+  try {
+    const existed = await Appointment.findByPk(req.params.id)
+    if (!existed) {
+      return res.status(404).send();
+    }
+
+    await Appointment.destroy({ where: { id: req.params.id } });
+
+    return res.status(204).send();
+  } catch (error) {
+    console.error(error)
+    return res.status(500).send();
+  }
+});
 
 module.exports = appointmentRoute;

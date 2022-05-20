@@ -34,7 +34,7 @@ db.user.hasMany(db.appointment, {
   foreignKey: 'doctorId',
   as: 'doctorAppointments'
 })
-db.user.belongsToMany(db.role, { through: 'user_role' });
+db.user.belongsToMany(db.role, { as: 'roles', through: 'user_role' });
 
 db.role.belongsToMany(db.user, { through: 'user_role' })
 db.blog.belongsTo(db.user);

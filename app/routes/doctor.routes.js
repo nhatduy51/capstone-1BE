@@ -83,6 +83,28 @@ doctorRoute.get("/byKeyword", async (req, res, next) => {
   }
 })
 
+doctorRoute.delete("/:id", authMiddlewares.isAdmin, async (req, res, next) => {
+  try {
+    const existed = await User.findOne({
+      include: [{
+        model: Role,
+        as: 'roles',
+        require: true,
+      }],
+      where: { '$roles.name$': 'doctor', id: req.params.id }
+    })
+    if (!existed) {
+      return res.status(404).send();
+    }
+
+    await User.destroy({ where: { id: req.params.id } });
+
+    return res.status(204).send();
+  } catch (error) {
+    console.error(error)
+    return res.status(500).send();
+  }
+});
 
 doctorRoute.post("/", authMiddlewares.isAdmin, async (req, res, next) => {
   try {
@@ -118,19 +140,5 @@ doctorRoute.post("/", authMiddlewares.isAdmin, async (req, res, next) => {
     return res.status(500).send();
   }
 })
-
-doctorRoute.put("/:id", authMiddlewares.isAdmin, async (req, res, next) => {
-  let doctor = await User.findByPk(req.params.id)
-  if (!doctor) {
-    return res.status(404).send();
-  }
-
-  doctor.update({
-    name: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-  })
-
-  return res.json(doctor)
-})
-
 
 module.exports = doctorRoute;
